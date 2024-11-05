@@ -25,7 +25,6 @@ public class ClientService {
     public Client create(Client client) {
         client.setId(null);
         client = this.clientRepository.save(client);
-        this.clientRepository.saveAll(client.getName());
         return client;
     }
 
