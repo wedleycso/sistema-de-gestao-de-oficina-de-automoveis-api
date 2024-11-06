@@ -5,8 +5,10 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.util.List;
+import java.util.ArrayList;
 
 @Setter
 @Getter
@@ -35,8 +37,17 @@ public class Client {
     @NotEmpty
     private String phone;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Vehicle> vehicles;
+    private List<Vehicle> vehicles = new ArrayList<>();
 
+    public void addVehicle(Vehicle vehicle) {
+        vehicles.add(vehicle);
+        vehicle.setClient(this);
+    }
 
+    public void removeVehicle(Vehicle vehicle) {
+        vehicles.remove(vehicle);
+        vehicle.setClient(null);
+    }
 }

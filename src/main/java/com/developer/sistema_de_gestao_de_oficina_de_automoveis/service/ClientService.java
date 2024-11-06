@@ -34,7 +34,16 @@ public class ClientService {
         newClient.setName(client.getName());
         newClient.setEmail(client.getEmail());
         newClient.setPhone(client.getPhone());
-        newClient.setVehicles(client.getVehicles());
+        
+        // Se houver novos veículos, atualiza a referência do cliente em cada um
+        if (client.getVehicles() != null) {
+            newClient.getVehicles().clear();
+            client.getVehicles().forEach(vehicle -> {
+                vehicle.setClient(newClient);
+                newClient.getVehicles().add(vehicle);
+            });
+        }
+        
         return this.clientRepository.save(newClient);
     }
 

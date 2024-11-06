@@ -3,8 +3,10 @@ package com.developer.sistema_de_gestao_de_oficina_de_automoveis.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.time.LocalDate;
 
@@ -27,14 +29,14 @@ public class Service {
 
     @Column(name = "price", nullable = false)
     @NotNull
-    @NotEmpty
+    @Positive
     private Double price;
 
     @Column(name = "date", nullable = false)
     @NotNull
-    @NotEmpty
     private LocalDate date;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;

@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class Vehicle {
     @NotEmpty
     private String model;
 
-    @Column(name = "year", nullable = false)
+    @Column(name = "vehicle_year", nullable = false)
     @NotNull
     private Integer year;
 
@@ -34,10 +36,12 @@ public class Vehicle {
     @NotEmpty
     private String licensePlate;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Service> services;
 
