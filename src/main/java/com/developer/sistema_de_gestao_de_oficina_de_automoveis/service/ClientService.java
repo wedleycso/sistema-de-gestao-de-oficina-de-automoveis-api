@@ -2,9 +2,10 @@ package com.developer.sistema_de_gestao_de_oficina_de_automoveis.service;
 
 import com.developer.sistema_de_gestao_de_oficina_de_automoveis.model.Client;
 import com.developer.sistema_de_gestao_de_oficina_de_automoveis.repository.ClientRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -17,15 +18,14 @@ public class ClientService {
     public Client findById(Long id) {
         Optional<Client> client = this.clientRepository.findById(id);
         return client.orElseThrow(() -> new RuntimeException(
-                "Usuário não encontrado! Id: " + id + ", Tipo: " + Client.class.getName()
+                "Cliente não encontrado! Id: " + id + ", Tipo: " + Client.class.getName()
         ));
     }
 
     @Transactional
     public Client create(Client client) {
         client.setId(null);
-        client = this.clientRepository.save(client);
-        return client;
+        return this.clientRepository.save(client);
     }
 
     @Transactional
@@ -38,12 +38,13 @@ public class ClientService {
         return this.clientRepository.save(newClient);
     }
 
+    @Transactional
     public void delete(Long id) {
         findById(id);
-        try{
+        try {
             this.clientRepository.deleteById(id);
-        }  catch (Exception e){
-            throw new RuntimeException("Erro ao excluir esse cliente pois há entidades relacionadas!");
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("Erro ao excluir esse cliente, pois há entidades relacionadas!");
         }
     }
 }
